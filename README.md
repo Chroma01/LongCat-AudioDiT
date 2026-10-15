@@ -88,6 +88,9 @@ LongCat-AudioDiT obtains state-of-the-art (SOTA) voice cloning performance on th
 1. Results of MOSS-TTS are from [MOSS-TTS](https://github.com/OpenMOSS/MOSS-TTS)
 2. Results of CosyVoice3.5 are from [CosyVoice3.5](https://mp.weixin.qq.com/s/sTNC7bVphs9zofly3lBoUQ)
 
+## Updates
+- Fixing a problem of volume normalization in the `load_audio` function defined in `utils.py`. **This volume normalization was applied to all training data and has not been applied in this repo until now, which caused training-inference mismatch. Generally, by fixing this mismatch, you may expect better quality and robustness of our models (not necessarily audible)**.  We apologize for this miss. (2026.10.15)
+
 ## Installation
 
 ```bash

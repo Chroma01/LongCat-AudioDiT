@@ -2,9 +2,26 @@ import re
 import librosa
 import torch
 
+def get_dbfs(y, max_possible=1):
+    max_sample = torch.max(torch.abs(y))
+    return 20 * torch.log10(max_sample / max_possible + 1e-8)
+
+def normalize_volume(y, target_dbfs=-6.0):
+    current_dbfs = get_dbfs(y)
+    
+    gain_db = target_dbfs - current_dbfs
+    gain = 10 ** (gain_db / 20)
+    
+    y_norm = y * gain
+    y_norm = torch.clip(y_norm, -1.0, 1.0)
+
+    return y_norm
+
 def load_audio(wavpath, sr):
     audio, _ = librosa.load(wavpath, sr=sr, mono=True)
-    return torch.from_numpy(audio).unsqueeze(0)
+    audio = torch.from_numpy(audio).unsqueeze(0)
+    audio = normalize_volume(audio, -6)
+    return audio
 
 def normalize_text(text):
     text = text.lower()
